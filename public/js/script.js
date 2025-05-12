@@ -1,8 +1,7 @@
-document.addEventListener('DOMContentLoaded', () => {
-  const hamburger = document.querySelector('.hamburger');
-  const navLinks = document.querySelector('.navigation-links');
+const hamburgerIcon = document.querySelector('.hamburger-icon');
+const navLinks = document.querySelector('nav ul');
 
-  hamburger.addEventListener('click', () => {
-    navLinks.classList.toggle('open');
-  });
+hamburgerIcon.addEventListener('click', () => {
+  console.log('Hamburger clicked!'); // Add this line
+  navLinks.classList.toggle('open');
 });
