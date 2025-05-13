@@ -40,16 +40,10 @@ app.get('/', (req, res) => {
     res.render('index', { title: 'Home' });
 });
 
-
-/* ***********************
- * Local Server Information
- *************************/
-const port = process.env.PORT || 5500;
-const host = process.env.HOST || 'localhost';
-
 /* ***********************
  * Start Server
  *************************/
+const port = process.env.PORT || 3000;
 app.listen(port, () => {
-  console.log(`App listening at http://${host}:${port}`);
+  console.log(`App listening on port ${port}`);
 });
