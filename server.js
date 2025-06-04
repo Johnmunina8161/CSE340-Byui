@@ -1,95 +1,175 @@
 /* ******************************************
- * This server.js file is the primary file of the
- * application. It is used to control the project.
- *******************************************/
+
+* This server.js file is the primary file of the 
+
+* application. It is used to control the project.
+
+*******************************************/
 
 /* ***********************
- * Require Statements
- *************************/
-require('dotenv').config(); // Load environment variables
-const express = require("express");
-const expressLayouts = require("express-ejs-layouts");
-const session = require("express-session");
-const path = require("path");
+
+* Require Statements
+
+*************************/
+
+const express = require("express")
+
+const expressLayouts = require("express-ejs-layouts")
+
+const env = require("dotenv").config()
+
+const app = express()
+
+const static = require("./routes/static")
+
 const baseController = require("./controllers/baseController")
-const inventoryRoute = require("./routes/inventoryRoute");
-const utilities = require("./utilities/");
 
-/* ***********************
- * Create Express App
- *************************/
-const app = express();
+const inventoryRoute = require("./routes/inventoryRoute")
 
-/* ***********************
- * Middleware
- *************************/
-app.use(express.static(path.join(__dirname, "public"))); // Serve static files
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
+const utilities = require('./utilities/index')
 
-/* ***********************
- * View Engine and Templates
- *************************/
-app.set("view engine", "ejs");
-app.use(expressLayouts);
-app.set("layout", "./layouts/layout"); // EJS layout file path
-app.set("views", path.join(__dirname, "views")); // Path to views
+const session = require("express-session")
 
+const pool = require('./database/')
+ 
+ 
 /* ***********************
- * Routes
- *************************/
-// Index route
-app.get("/", baseController.buildHome)
+
+* View Engine And Templates
+
+*************************/
+
+app.set("view engine", "ejs")
+
+app.use(expressLayouts)
+
+app.set("layout", "./layouts/layout") // not at views root
+ 
+ 
+/* ***********************
+
+* Middleware
+
+* ************************/
+
+app.use(session({
+
+  store: new (require('connect-pg-simple')(session))({
+
+    createTableIfMissing: true,
+
+    pool,
+
+  }),
+
+  secret: process.env.SESSION_SECRET,
+
+  resave: true,
+
+  saveUninitialized: true,
+
+  name: 'sessionId',
+
+}))
+ 
+// Express Messages Middleware
+
+app.use(require('connect-flash')())
+
+app.use(function(req, res, next){
+
+  res.locals.messages = require('express-messages')(req, res)
+
+  next()
+
+})
+ 
+ 
+/* ***********************
+
+* Routes
+
+*************************/
+
+app.use(static)
+
+//Index Route
+
+app.get("/", utilities.handleErrors(baseController.buildHome))
+ 
 // Inventory routes
+
 app.use("/inv", inventoryRoute)
+ 
+ 
 // File Not Found Route - must be last route in list
+
 app.use(async (req, res, next) => {
+
   next({status: 404, message: 'Sorry, we appear to have lost that page.'})
-})
 
-/* ***********************
-* Express Error Handler
-* Place after all other middleware
-*************************/
-app.use(async (err, req, res, next) => {
-  let nav = await utilities.getNav()
-  console.error(`Error at: "${req.originalUrl}": ${err.message}`)
-  res.render("errors/error", {
-    title: err.status || 'Server Error',
-    message: err.message,
-    nav
-  })
 })
-
+ 
+ 
 /* ***********************
+
 * Express Error Handler
+
 * Place after all other middleware
+
 *************************/
+
 app.use(async (err, req, res, next) => {
+
   let nav = await utilities.getNav()
+
   console.error(`Error at: "${req.originalUrl}": ${err.message}`)
-  console.dir(err);
-  if(err.status == 404){ message = err.message} else {message = 'Oh no! There was a crash. Maybe try a different route?'}
+
+  if (err.status == 404) {
+
+    message = err.message
+
+  } else {
+
+    message = "Oh no! There was a crash. Maybe try a different route?"
+
+  }
+
   res.render("errors/error", {
-    title: err.status || 'Server Error',
+
+    title: err.status || "Server Error",
+
     message,
-    nav
+
+    nav,
+
   })
+
 })
-
+ 
+ 
+ 
 /* ***********************
- * Local Server Information
- * Values from .env (environment) file
- *************************/
-const port = process.env.PORT;
-const host = process.env.HOST;
 
+* Local Server Information
+
+* Values from .env (environment) file
+
+*************************/
+
+const port = process.env.PORT
+
+const host = process.env.HOST
+ 
 /* ***********************
- * Start Server
- *************************/
+
+* Log statement to confirm server operation
+
+*************************/
 
 app.listen(port, () => {
-  console.log(`App listening on port ${port}`);
-});
 
+  console.log(`app listening on ${host}:${port}`)
 
+})
+ 

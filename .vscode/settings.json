@@ -1,0 +1,31 @@
+{
+    "sqltools.connections": [
+        {
+            "pgOptions": {
+                "ssl": {
+                    "rejectUnauthorized": true
+                }
+            },
+            "previewLimit": 50,
+            "server": "localhost",
+            "driver": "PostgreSQL",
+            "username": "demo8160",
+            "database": "demo8160",
+            "password": "NkUd7NQNksFQ2uBmaVqL8z9nukilI5F",
+            "connectString": "postgresql://demo8160:NkUd7NQNksFQ2uBmaVqL8z9nukilI5FQ@dpg-cv5veb56l47c73d2315g-a.oregon-postgres.render.com/demo8160",
+            "name": "render.com"
+        },
+        {
+            "pgOptions": {
+                "ssl": {
+                    "rejectUnauthorized": true
+                }
+            },
+            "previewLimit": 50,
+            "server": "localhost",
+            "driver": "PostgreSQL",
+            "name": "render.com",
+            "connectString": "postgresql://john8160:Oo1Katg0W7iTrmXEgmWRjCvpkMOOcBDV@dpg-d0hvecq4d50c73aupieg-a.oregon-postgres.render.com/john8160"
+        }
+    ]
+}
