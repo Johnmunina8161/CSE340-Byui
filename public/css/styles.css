@@ -674,3 +674,15 @@ text-align: center;
 
   
 }
+
+/*login flash messege*/
+
+.notice {
+  background-color: #e0ffe0;
+  border: 1px solid #00cc00;
+  padding: 1em;
+  margin-bottom: 1em;
+  color: #006600;
+  border-radius: 5px;
+}
+

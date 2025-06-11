@@ -13,11 +13,13 @@ const session = require("express-session")
 const flash = require("connect-flash")
 const messages = require("express-messages")
 const app = express()
+
+const pool = require("./database/")
+const utilities = require("./utilities/index")
 const static = require("./routes/static")
 const baseController = require("./controllers/baseController")
 const inventoryRoute = require("./routes/inventoryRoute")
-const utilities = require("./utilities/index")
-const pool = require("./database/")
+const accountRoute = require("./routes/accountRoute")
 
 /* ***********************
  * View Engine and Templates
@@ -29,6 +31,13 @@ app.set("layout", "./layouts/layout") // Path to the layout file
 /* ***********************
  * Middleware
  *************************/
+
+// Body-parsing middleware for POST form data
+app.use(express.urlencoded({ extended: true }))
+app.use(express.json())
+
+// Static file middleware (for CSS, JS, images)
+app.use(express.static("public"))
 
 // Session setup with PostgreSQL store
 app.use(session({
@@ -49,19 +58,15 @@ app.use(function(req, res, next){
   next()
 })
 
-// ✅ Static file middleware (for CSS, JS, images)
-app.use(express.static("public"))
-
 /* ***********************
  * Routes
  *************************/
 app.use(static)
+app.use("/account", accountRoute)
+app.use("/inv", inventoryRoute)
 
 // Index Route
 app.get("/", utilities.handleErrors(baseController.buildHome))
-
-// Inventory Routes
-app.use("/inv", inventoryRoute)
 
 /* ***********************
  * File Not Found Route - must be last route in list
