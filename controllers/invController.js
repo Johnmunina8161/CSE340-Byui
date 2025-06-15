@@ -1,7 +1,7 @@
 const invModel = require("../models/inventory-model")
 const utilities = require("../utilities/")
 // controllers/invController.js
-const invCont = {};
+const invCont = {}
 
 /* ***************************
  *  Build inventory by classification view
@@ -327,6 +327,7 @@ invCont.deleteItem = async function (req, res, next) {
     res.redirect("/inv/delete/inv_id")
   }
 }
+
 
 
 

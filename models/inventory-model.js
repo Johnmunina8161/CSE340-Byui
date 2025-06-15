@@ -5,10 +5,17 @@ const pool = require("../database/")
  *  Unit 3, MVC: Get Started Activity
  * ************************** */
 async function getClassifications() {
-  return await pool.query(
-    "SELECT * FROM public.classification ORDER BY classification_name"
-  )
+  try {
+    const data = await pool.query(
+      "SELECT * FROM public.classification ORDER BY classification_name"
+    )
+    return data // data.rows will be available
+  } catch (error) {
+    console.error("getClassifications() DB Error:", error.message)
+    return { rows: [] } // Return an empty list to avoid crashing .rows.forEach
+  }
 }
+
 
 /* ***************************
  *  Get all inventory and classification_name by classification_id

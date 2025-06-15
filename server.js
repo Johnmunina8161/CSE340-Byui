@@ -22,24 +22,10 @@ const inventoryRoute = require("./routes/inventoryRoute")
 const accountRoute = require("./routes/accountRoute")
 
 /* ***********************
- * View Engine and Templates
- *************************/
-app.set("view engine", "ejs")
-app.use(expressLayouts)
-app.set("layout", "./layouts/layout") // Path to the layout file
-
-/* ***********************
  * Middleware
  *************************/
 
-// Body-parsing middleware for POST form data
-app.use(express.urlencoded({ extended: true }))
-app.use(express.json())
-
-// Static file middleware (for CSS, JS, images)
-app.use(express.static("public"))
-
-// Session setup with PostgreSQL store
+// Session setup with PostgreSQL store (✅ only once!)
 app.use(session({
   store: new (require('connect-pg-simple')(session))({
     createTableIfMissing: true,
@@ -51,12 +37,27 @@ app.use(session({
   name: 'sessionId',
 }))
 
-// Flash messages
-app.use(flash())
+// Express Messages Middleware
+app.use(require('connect-flash')())
 app.use(function(req, res, next){
-  res.locals.messages = messages(req, res)
+  res.locals.messages = require('express-messages')(req, res)
   next()
 })
+
+
+/* ***********************
+ * View Engine and Templates
+ *************************/
+app.set("view engine", "ejs")
+app.use(expressLayouts)
+app.set("layout", "./layouts/layout") // Path to the layout file
+
+// Body-parsing middleware for POST form data
+app.use(express.urlencoded({ extended: true }))
+app.use(express.json())
+
+// Static file middleware (for CSS, JS, images)
+app.use(express.static("public"))
 
 /* ***********************
  * Routes
