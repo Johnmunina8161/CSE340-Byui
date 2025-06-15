@@ -20,6 +20,7 @@ async function buildLogin(req, res, next) {
     errors: null,
   })
 }
+module.exports={buildLogin}
 
 /* ****************************************
 *  Deliver registration view
@@ -33,6 +34,8 @@ async function buildRegister(req, res, next) {
     errors: null,
   })
 }
+
+module.exports={buildLogin, buildRegister}
 
 /* ****************************************
 *  Process Registration

@@ -59,15 +59,17 @@ app.use(express.json())
 // Static file middleware (for CSS, JS, images)
 app.use(express.static("public"))
 
-/* ***********************
+/* ************************
  * Routes
- *************************/
-app.use(static)
-app.use("/account", accountRoute)
-app.use("/inv", inventoryRoute)
-
-// Index Route
+ **************************/
+app.use(require("./routes/static"))
+// Index route - Unit 3, activity
 app.get("/", utilities.handleErrors(baseController.buildHome))
+// Inventory routes - Unit 3, activity
+app.use("/inv", require("./routes/inventoryRoute"))
+// Account routes - Unit 4, activity
+app.use("/account", require("./routes/accountRoute"))
+
 
 /* ***********************
  * File Not Found Route - must be last route in list
