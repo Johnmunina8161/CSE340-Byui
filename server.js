@@ -21,6 +21,7 @@ const baseController = require("./controllers/baseController")
 const inventoryRoute = require("./routes/inventoryRoute")
 const accountRoute = require("./routes/accountRoute")
 
+
 /* ***********************
  * Middleware
  *************************/
@@ -37,13 +38,20 @@ app.use(session({
   name: 'sessionId',
 }))
 
+// ✅ Make session data available to EJS views
+app.use((req, res, next) => {
+  res.locals.loggedin = req.session.loggedin || false
+  res.locals.accountData = req.session.accountData || null
+  next()
+})
+
+
 // Express Messages Middleware
 app.use(require('connect-flash')())
 app.use(function(req, res, next){
   res.locals.messages = require('express-messages')(req, res)
   next()
 })
-
 
 /* ***********************
  * View Engine and Templates
@@ -70,7 +78,6 @@ app.use("/inv", require("./routes/inventoryRoute"))
 // Account routes - Unit 4, activity
 app.use("/account", require("./routes/accountRoute"))
 
-
 /* ***********************
  * File Not Found Route - must be last route in list
  *************************/
@@ -82,6 +89,7 @@ app.use(async (req, res, next) => {
  * Express Error Handler
  * Place after all other middleware
  *************************/
+
 app.use(async (err, req, res, next) => {
   let nav = await utilities.getNav()
   console.error(`Error at: "${req.originalUrl}": ${err.message}`)

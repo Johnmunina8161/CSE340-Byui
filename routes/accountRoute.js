@@ -1,59 +1,36 @@
-/* ************************************
- *  Account routes
- *  Unit 4, deliver login view activity
- *  ******************************** */
-// Needed Resources
-const express = require("express")
-const router = new express.Router()
-const accountController = require("../controllers/accountController")
-const regValidate = require("../utilities/account-validation")
-const utilities = require("../utilities")
-/* ************************************
- *  Deliver Login View
- *  Unit 4, deliver login view activity
- *  ******************************** */
-router.get("/login", utilities.handleErrors(accountController.buildLogin))
+const express = require("express");
+const router = express.Router();
 
-/* ************************************
- *  Deliver Registration View
- *  Unit 4, deliver registration view activity
- *  ******************************** */
-router.get("/login", utilities.handleErrors(accountController.buildLogin));
-router.post(
-  "/login",
-  regValidate.loginRules(),
-  regValidate.checkLoginData,
-  utilities.handleErrors(accountController.accountLogin)
-);
+const accountController = require("../controllers/accountController");
+const utilities = require("../utilities");
 
+// Registration routes
+router.get("/register", accountController.buildRegister);
+router.post("/register", accountController.registerAccount);
 
-router.post(
-  "/register",
-  regValidate.registationRules(),
-  regValidate.checkRegData,
-  utilities.handleErrors(accountController.registerAccount)
-)
+// Login routes
+router.get("/login", accountController.buildLogin);
+router.post("/login", accountController.accountLogin);
 
+// Account management routes (require login)
+router.get("/", utilities.checkLogin, accountController.buildAccountManagementView);
 
-/* ************************************
- *  Process Login
- *  Unit 4, stickiness activity
- *  Modified in Unit 5, Login Process activity
- *  ******************************** */
+// Update account info
+router.get("/update/:accountId", utilities.checkLogin, accountController.buildUpdate);
+router.post("/update", utilities.checkLogin, accountController.updateAccount);
 
-router.post(
-  "/login",
-  regValidate.loginRules(),
-  regValidate.checkLoginData,
-  utilities.handleErrors(accountController.accountLogin)
-)
+// Update password
+router.post("/updatePassword", utilities.checkLogin, accountController.updatePassword);
 
-// Process the login attempt
-router.post(
-  "/login",
-  (req, res) => {
-    res.status(200).send('login process')
-  }
-)
+// Logout route with session destruction
+router.get("/logout", (req, res, next) => {
+  req.session.destroy(err => {
+    if (err) {
+      return next(err);
+    }
+    res.clearCookie("connect.sid"); // Clear session cookie
+    res.redirect("/");
+  });
+});
 
-module.exports = router
+module.exports = router;

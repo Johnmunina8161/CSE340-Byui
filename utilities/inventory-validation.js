@@ -169,9 +169,10 @@ validate.checkInventoryData = async (req, res, next) => {
   next()
 }
 
+
 /* ******************************
- *  Check update data and return errors or continue to edit view
- *  Unit 5, Update Step 2 activity
+ * reflect that errors will be directed back to the edit view.
+ * Unit 5, Update Step 2 activity
  * ***************************** */
 validate.checkUpdateData = async (req, res, next) => {
   const {

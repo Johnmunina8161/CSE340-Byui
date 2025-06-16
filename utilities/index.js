@@ -296,6 +296,19 @@ Util.buildRecipientList = (recipientData, preselected = null) => {
 
 };
 
+/**
+ * Middleware to populate view locals from session
+ */
+Util.checkLoginStatus = (req, res, next) => {
+  if (req.session.loggedin) {
+    res.locals.loggedin = 1
+    res.locals.accountData = req.session.accountData
+  } else {
+    res.locals.loggedin = 0
+  }
+  next()
+}
+
 /* ****************************************
 *  Deliver login view
 * *************************************** */
