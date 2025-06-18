@@ -12,7 +12,6 @@ const validate = {}
  * ********************************* */
 validate.classificationRule = () => {
   return [
-    // name is required and must be string
     body("classification_name")
       .trim()
       .isLength({ min: 1 })
@@ -27,8 +26,7 @@ validate.classificationRule = () => {
  * ***************************** */
 validate.checkClassificationData = async (req, res, next) => {
   const { classification_name } = req.body
-  let errors = []
-  errors = validationResult(req)
+  const errors = validationResult(req)
   if (!errors.isEmpty()) {
     let nav = await utilities.getNav()
     res.render("inventory/add-classification", {
@@ -50,48 +48,36 @@ validate.newInventoryRules = () => {
   return [
     body("classification_id")
       .trim()
-      .isInt({
-        no_symbols: true,
-      })
+      .isInt({ no_symbols: true })
       .withMessage("The vehicle's classification is required."),
 
     body("inv_make")
       .trim()
       .escape()
-      .isLength({
-        min: 3,
-      })
+      .isLength({ min: 3 })
       .withMessage("A vehicle make is required."),
 
     body("inv_model")
       .trim()
       .escape()
-      .isLength({
-        min: 3,
-      })
+      .isLength({ min: 3 })
       .withMessage("A vehicle model is required."),
 
     body("inv_description")
       .trim()
       .escape()
-      .isLength({
-        min: 3,
-      })
+      .isLength({ min: 3 })
       .withMessage("A vehicle description is required."),
 
-      body("inv_image")
+    body("inv_image")
       .trim()
-      .isLength({
-        min: 6,
-      })
+      .isLength({ min: 6 })
       .matches(/\.(jpg|jpeg|png|webp)$/)
       .withMessage("A vehicle image path is required and must be an image."),
 
     body("inv_thumbnail")
       .trim()
-      .isLength({
-        min: 6,
-      })
+      .isLength({ min: 6 })
       .matches(/\.(jpg|jpeg|png|webp)$/)
       .withMessage("A vehicle thumbnail path is required and must be an image."),
 
@@ -102,25 +88,18 @@ validate.newInventoryRules = () => {
 
     body("inv_year")
       .trim()
-      .isInt({
-        min: 1900,
-        max: 2099,
-      })
+      .isInt({ min: 1900, max: 2099 })
       .withMessage("A vehicle year is required."),
 
     body("inv_miles")
       .trim()
-      .isInt({
-        no_symbols: true,
-      })
+      .isInt({ no_symbols: true })
       .withMessage("The vehicle's miles is required."),
 
     body("inv_color")
       .trim()
       .escape()
-      .isLength({
-        min: 3,
-      })
+      .isLength({ min: 3 })
       .withMessage("The vehicle's color is required."),
   ]
 }
@@ -142,8 +121,8 @@ validate.checkInventoryData = async (req, res, next) => {
     inv_color,
     classification_id,
   } = req.body
-  let errors = []
-  errors = validationResult(req)
+
+  const errors = validationResult(req)
   if (!errors.isEmpty()) {
     let nav = await utilities.getNav()
     const classificationSelect = await utilities.buildClassificationList(
@@ -169,9 +148,8 @@ validate.checkInventoryData = async (req, res, next) => {
   next()
 }
 
-
 /* ******************************
- * reflect that errors will be directed back to the edit view.
+ * Reflect that errors will be directed back to the edit view.
  * Unit 5, Update Step 2 activity
  * ***************************** */
 validate.checkUpdateData = async (req, res, next) => {
@@ -188,8 +166,8 @@ validate.checkUpdateData = async (req, res, next) => {
     classification_id,
     inv_id,
   } = req.body
-  let errors = []
-  errors = validationResult(req)
+
+  const errors = validationResult(req)
   if (!errors.isEmpty()) {
     let nav = await utilities.getNav()
     const classificationSelect = await utilities.buildClassificationList(

@@ -1,6 +1,7 @@
 // Needed Resources 
 const express = require("express")
-const router = new express.Router() 
+const router = express.Router();
+
 const invController = require("../controllers/invController")
 const utilities = require("../utilities")
 const invChecks = require("../utilities/inventory-validation")
@@ -69,6 +70,10 @@ router.get(
   //utilities.checkAccountType,
   utilities.handleErrors(invController.newInventoryView)
 )
+
+// Show the form to add a new vehicle (GET)
+router.get("/add-inventory", utilities.checkLogin, invController.buildAddInventory);
+
 
 /* ****************************************
  * Process add-vehicle Route

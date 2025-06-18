@@ -111,10 +111,10 @@ invCont.addClassification = async function (req, res, next) {
 }
 
 /* ***************************
- * Build new inventory view
+ * Build Add Inventory View (renamed to match route)
  * Assignment 4, Task 3
  * ************************** */
-invCont.newInventoryView = async function (req, res, next) {
+invCont.buildAddInventory = async function (req, res, next) {
   let nav = await utilities.getNav()
   const classificationSelect = await utilities.buildClassificationList()
   res.render("./inventory/add-inventory", {
